@@ -1,0 +1,20 @@
+{
+  "setPermissionRegistryRoles": "130520251627",
+  "setDibs": "130520251627",
+  "setDibsInGaugeCLFactory": "130520251627",
+  "deployVoterV3Init": "130520251627",
+  "setVoterInGaugeManager": "130520251627",
+  "setBribeFactoryInGaugeManager": "130520251627",
+  "setVoterBribeV3": "130520251627",
+  "setMinterUpgradableInGaugeManager": "130520251627",
+  "setMinterInBlack": "130520251627",
+  "initializeMinter": "130520251627",
+  "setMinterInRewardDistributer": "130520251627",
+  "setVoterV3InVotingEscrow": "130520251627",
+  "pushDefaultRewardToken": "130520251627",
+  "setGenesisManagerInGenesisFactory": "130520251627",
+  "setGenesisManagerRole": "130520251627",
+  "setGenesisPoolManagerInGaugeManager": "130520251627",
+  "setGenesisPoolManagerInPairFactory": "130520251627",
+  "setGenesisPoolManagerInEpochController": "130520251627"
+}

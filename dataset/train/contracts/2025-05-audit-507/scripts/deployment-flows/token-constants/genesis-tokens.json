@@ -1,0 +1,135 @@
+[
+  {
+    "name": "SHIBA INU",
+    "ticker": "SHIB",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x239b9c1f24f3423062b0d364796e07ee905e9fce/logo.svg",
+    "decimal": 18,
+    "address": "0x36688F830b24883CAcf5C5273DD1020C9502619C"
+  },
+  {
+    "name": "DOGE COIN",
+    "ticker": "DOGE",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x67f0870bb897f5e1c369976b4a2962d527b9562c/logo.svg",
+    "decimal": 18,
+    "address": "0xda4FF40388F19310ef00C253A160b9462032FC06"
+  },
+  {
+    "name": "MORPHO",
+    "ticker": "MOR",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x7431ada8a591c955a994a21710752ef9b882b8e3/logo.svg",
+    "decimal": 18,
+    "address": "0x7202d7401C71213691cAAf146eAc1b2284b36e8F"
+  },
+  {
+    "name": "PEPE",
+    "ticker": "PEPE",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x52b492a33e447cdb854c7fc19f1e57e8bfa1777d/logo.svg",
+    "decimal": 18,
+    "address": "0x2a89Cc0D1F6EfeF8f314AC97ac186C20166A9169"
+  },
+  {
+    "name": "ANZ",
+    "ticker": "ANZ",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xeec468333ccc16d4bf1cef497a56cf8c0aae4ca3/logo.svg",
+    "decimal": 18,
+    "address": "0x05559242Ae701738A3f1D8b2c05c2d28CE80d033"
+  },
+  {
+    "name": "CLANKER",
+    "ticker": "CLANKER",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x1bc0c42215582d5a085795f4badbac3ff36d1bcb/logo.svg",
+    "decimal": 18,
+    "address": "0xF59e7149351b057F6E53cE225eb57ec9603dA011"
+  },
+  {
+    "name": "ANON",
+    "ticker": "ANON",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c/logo.svg",
+    "decimal": 18,
+    "address": "0x30f26841Ce3Fcf71C8DaC41fd4eBA392d094330E"
+  },
+  {
+    "name": "WNTX",
+    "ticker": "WNTX",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x3e31966d4f81c72d2a55310a6365a56a4393e98d/logo.svg",
+    "decimal": 18,
+    "address": "0x445d246Ff7Bf3fbd8c5F2481d764E3812FdF24C6"
+  },
+  {
+    "name": "CTX",
+    "ticker": "CTX",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xbb22ff867f8ca3d5f2251b4084f6ec86d4666e14/logo.svg",
+    "decimal": 18,
+    "address": "0xa00552255D71459Bb0E28a73AF0Ba46feCE78Fa5"
+  },
+  {
+    "name": "DRV",
+    "ticker": "DRV",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x9d0e8f5b25384c7310cb8c6ae32c8fbeb645d083/logo.svg",
+    "decimal": 18,
+    "address": "0x4a928b15c2D1c77CA6010A08dc67f27724f4Fa6e"
+  },
+  {
+    "name": "GAME",
+    "ticker": "GAME",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x1c4cca7c5db003824208adda61bd749e55f463a3/logo.svg",
+    "decimal": 18,
+    "address": "0xD2FaCd7124974807D3392745F8A22c5c3B79e3D2"
+  },
+  {
+    "name": "AITECH",
+    "ticker": "AITECH",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xd71552d9e08e5351adb52163b3bbbc4d7de53ce1/logo.svg",
+    "decimal": 18,
+    "address": "0x5310266dDB520aa94b65c050CA0997Ebc084142d"
+  },
+  {
+    "name": "BMX",
+    "ticker": "BMX",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x548f93779fbc992010c07467cbaf329dd5f059b7/logo.svg",
+    "decimal": 18,
+    "address": "0x1ae97c94AC0c6434CEd694DDE710Ad919E8DC7a9"
+  },
+  {
+    "name": "BOLD",
+    "ticker": "BOLD",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x087c440f251ff6cfe62b86dde1be558b95b4bb9b/logo.svg",
+    "decimal": 18,
+    "address": "0xBFb461fCe5c1566051D80feaEfF61f141a4fFe64"
+  },
+  {
+    "name": "ETHFI",
+    "ticker": "ETHFI",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x6c240dda6b5c336df09a4d011139beaaa1ea2aa2/logo.svg",
+    "decimal": 18,
+    "address": "0xDEbcE91Ea4014Ba04CAEB9AED875534fbC010DA4"
+  },
+  {
+    "name": "EXTRA",
+    "ticker": "EXTRA",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0x2dad3a13ef0c6366220f989157009e501e7938f8/logo.svg",
+    "decimal": 18,
+    "address": "0x55A8E8882636DABc14885232563FF7B74dD61f21"
+  },
+  {
+    "name": "FAI",
+    "ticker": "FAI",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xb33ff54b9f7242ef1593d2c9bcd8f9df46c77935/logo.svg",
+    "decimal": 18,
+    "address": "0x5A0988589CcdBd16Fcbb9B67d15B3506A7ba4a64"
+  },
+  {
+    "name": "FARM",
+    "ticker": "FARM",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xd08a2917653d4e460893203471f0000826fb4034/logo.svg",
+    "decimal": 18,
+    "address": "0x7f876F4F44D2D911364Cae2E555354C2B4a86d3b"
+  },
+  {
+    "name": "FLAY",
+    "ticker": "FLAY",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xf1a7000000950c7ad8aff13118bb7ab561a448ee/logo.svg",
+    "decimal": 18,
+    "address": "0xB3D0209729Edea221E503726d74303C7c005d4ee"
+  }
+]

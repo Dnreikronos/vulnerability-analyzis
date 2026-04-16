@@ -1,0 +1,56 @@
+[
+    {
+        "name": "Quantum Byte",
+        "ticker": "QBT",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xeb6d78148f001f3aa2f588997c5e102e489ad341/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "Solaris Token",
+        "ticker": "SLR",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x833589fcd6edb6e08f4c7c32d4f71b54bda02913/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "EternaX",
+        "ticker": "ETX",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x940181a94a35a4569e4529a3cdfb74e38fd98631/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "LunarFlare",
+        "ticker": "LNF",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x4f9fd6be4a90f2620860d680c0d4d5fb53d1a825/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "HyperChain",
+        "ticker": "HPC",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xbc45647ea894030a4e9801ec03479739fa2485f0/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "Vertex Protocol",
+        "ticker": "VTX",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x2a06a17cbc6d0032cac2c6696da90f29d39a1a29/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "Stellar Forge",
+        "ticker": "SFG",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens//8453/0xecaf81eb42cd30014eb44130b89bcd6d4ad98b92/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "AetheriumX",
+        "ticker": "AEX",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xcacf1ca03983ce6c7e235fb20c70acc70ed13509/logo.svg",
+        "decimal": 18
+    },
+    {
+        "name": "Nova Genesis",
+        "ticker": "NVG",
+        "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x9d5a383581882750ce27f84c72f017b378edb736/logo.svg",
+        "decimal": 18
+    }
+]

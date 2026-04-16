@@ -1,0 +1,34 @@
+{
+  "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "arrowParens": "always",
+        "endOfLine": "auto",
+        "trailingComma": "all",
+        "tabWidth": 2,
+        "useTabs": false,
+        "printWidth": 100,
+        "singleQuote": true,
+        "bracketSpacing": true,
+        "bracketSameLine": false,
+        "semi": true
+      }
+    },
+    {
+      "files": "*.sol",
+      "options": {
+        "parser": "solidity-parse",
+        "printWidth": 100,
+        "endOfLine": "auto",
+        "trailingComma": "all",
+        "tabWidth": 2,
+        "useTabs": false,
+        "singleQuote": false,
+        "bracketSpacing": true,
+        "bracketSameLine": true,
+        "semi": true
+      }
+    }
+  ]
+}

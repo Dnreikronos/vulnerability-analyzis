@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-05-26T16:08:30.846Z",
+  "network": "fuji",
+  "deployer": "0x8ec18CcA7E8d40861dc07C217a6426f60005A661",
+  "entryPoint": "0xf93d5C6Ce77497A54d60d6650e2147d29A24A196",
+  "plugin": "0x0000000000000000000000000000000000000000",
+  "algebraPoolAPIStorage": "0xF7c7278D02Ba2E0445A79fd9c0F632570A992dcD",
+  "algebraFeeRecipient": "0x99767d366a143793C8F28190Bc1b85896Cfe5188",
+  "algebraFeeManager": "0x476461e6d5cAf709Fe2455f881721853Ce0433A5",
+  "algebraFeeShare": 20,
+  "algebraFactory": "0xf9E1eedeE5a861C76602B310D4f4452e667B63BC",
+  "pluginFactory": "0x9D2b5a75dD8fA1e89122feb77af6E178B9769Ab9",
+  "algebraFarmingProxyPluginFactory": "0xbc99A213Cc3833C89d23bD2d99D2dB938252A9e8",
+  "contracts": {
+    "tickSpacing_1": "0xd4A36A73789cf7685E4aA2815FC28Ee75752D92E",
+    "tickSpacing_20": "0x51f770983A0BA7f5bFbe0338eb5cAdb678055Ade",
+    "tickSpacing_100": "0xa389c4ce8a47808E83B3A840C3361de65ba5aAB1",
+    "tickSpacing_1000": "0x26D5AC8fc65769C11c83227EDe47E44127622aD3"
+  }
+}

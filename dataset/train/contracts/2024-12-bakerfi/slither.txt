@@ -1,0 +1,529 @@
+INFO:Detectors:
+BalancerFlashLender.receiveFlashLoan(address[],uint256[],uint256[],bytes) (contracts/core/flashloan/BalancerFlashLender.sol#99-134) uses arbitrary from in transferFrom: IERC20(asset).safeTransferFrom(address(borrower),address(_balancerVault),amount + fee) (contracts/core/flashloan/BalancerFlashLender.sol#133)
+UseTokenActions.pullTokenFrom(IERC20,address,uint256) (contracts/core/hooks/UseTokenActions.sol#54-61) uses arbitrary from in transferFrom: IERC20(token).safeTransferFrom(from,address(this),amount) (contracts/core/hooks/UseTokenActions.sol#60)
+UseTokenActions.pushTokenFrom(IERC20,address,address,uint256) (contracts/core/hooks/UseTokenActions.sol#85-94) uses arbitrary from in transferFrom: IERC20(token).safeTransferFrom(from,to,amount) (contracts/core/hooks/UseTokenActions.sol#93)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom
+INFO:Detectors:
+UsePermitTransfers.pullTokensWithPermit(IERC20Permit,uint256,address,uint256,uint8,bytes32,bytes32) (contracts/core/hooks/UsePermitTransfers.sol#21-35) uses arbitrary from in transferFrom in combination with permit: IERC20(address(token)).safeTransferFrom(owner,address(this),amount) (contracts/core/hooks/UsePermitTransfers.sol#34)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom-used-with-permit
+INFO:Detectors:
+PythOracle.getAndUpdatePrice(bytes) (contracts/oracles/PythOracle.sol#83-97) sends eth to arbitrary user
+	Dangerous calls:
+	- _pyth.updatePriceFeeds{value: fee}(priceUpdates) (contracts/oracles/PythOracle.sol#90)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#functions-that-send-ether-to-arbitrary-destinations
+INFO:Detectors:
+VaultBase._redeemInternal(uint256,address,address,bool) (contracts/core/VaultBase.sol#373-427) ignores return value by IERC20Upgradeable(_asset()).transfer(receiver,amount - fee) (contracts/core/VaultBase.sol#413)
+VaultBase._redeemInternal(uint256,address,address,bool) (contracts/core/VaultBase.sol#373-427) ignores return value by IERC20Upgradeable(_asset()).transfer(getFeeReceiver(),fee) (contracts/core/VaultBase.sol#414)
+VaultBase._redeemInternal(uint256,address,address,bool) (contracts/core/VaultBase.sol#373-427) ignores return value by IERC20Upgradeable(_asset()).transfer(receiver,amount) (contracts/core/VaultBase.sol#421)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-transfer
+INFO:Detectors:
+RebaseLibrary.toBase(Rebase,uint256,bool) (contracts/libraries/RebaseLibrary.sol#37-46) performs a multiplication on the result of a division:
+	- base = (elastic * total.base) / total.elastic (contracts/libraries/RebaseLibrary.sol#41)
+	- roundUp && (base * total.elastic) / total.base < elastic (contracts/libraries/RebaseLibrary.sol#42)
+RebaseLibrary.toElastic(Rebase,uint256,bool) (contracts/libraries/RebaseLibrary.sol#49-58) performs a multiplication on the result of a division:
+	- elastic = (base * total.elastic) / total.base (contracts/libraries/RebaseLibrary.sol#53)
+	- roundUp && (elastic * total.base) / total.elastic < base (contracts/libraries/RebaseLibrary.sol#54)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+INFO:Detectors:
+UseLeverage._calcDeltaPosition(uint256,uint256,uint256) (contracts/core/hooks/UseLeverage.sol#47-59) uses a dangerous strict equality:
+	- percentageToBurn == 0 || percentageToBurn > PERCENTAGE_PRECISION (contracts/core/hooks/UseLeverage.sol#52)
+StrategyLeverage.getPosition(IOracle.PriceOptions) (contracts/core/strategies/StrategyLeverage.sol#190-199) uses a dangerous strict equality:
+	- totalCollateralInAsset == 0 (contracts/core/strategies/StrategyLeverage.sol#194)
+StrategyLeverage.harvest() (contracts/core/strategies/StrategyLeverage.sol#410-467) uses a dangerous strict equality:
+	- totalCollateralInDebt == 0 || totalDebt == 0 (contracts/core/strategies/StrategyLeverage.sol#422)
+StrategyLeverage.harvest() (contracts/core/strategies/StrategyLeverage.sol#410-467) uses a dangerous strict equality:
+	- newDeployedAmount == deployedAmount (contracts/core/strategies/StrategyLeverage.sol#447)
+StrategyLeverage.harvest() (contracts/core/strategies/StrategyLeverage.sol#410-467) uses a dangerous strict equality:
+	- deltaDebt == 0 (contracts/core/strategies/StrategyLeverage.sol#452)
+AerodromeLibrary.swapAerodrome(ISwapRouter,ISwapHandler.SwapParams) (contracts/libraries/AerodromeLibrary.sol#30-79) uses a dangerous strict equality:
+	- amountOut == 0 (contracts/libraries/AerodromeLibrary.sol#58)
+UniV2Library.swapUniV2(IUniswapV2Router02,ISwapHandler.SwapParams) (contracts/libraries/UniV2Library.sol#28-100) uses a dangerous strict equality:
+	- amountOut == 0 (contracts/libraries/UniV2Library.sol#97)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+INFO:Detectors:
+Reentrancy in UseUnifiedSwapper.disableRoute(address,address) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#83-93):
+	External calls:
+	- ! IERC20(tokenIn).approve(_routes[key].router,0) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#89)
+	- ! IERC20(tokenOut).approve(_routes[key].router,0) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#90)
+	State variables written after the call(s):
+	- _routes[key].provider = SwapProvider.NONE (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#92)
+	UseUnifiedSwapper._routes (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#55) can be used in cross function reentrancies:
+	- UseUnifiedSwapper.disableRoute(address,address) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#83-93)
+	- UseUnifiedSwapper.enableRoute(address,address,UseUnifiedSwapper.RouteInfo) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#66-76)
+	- UseUnifiedSwapper.isRouteEnabled(address,address) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#101-104)
+Reentrancy in UseUnifiedSwapper.enableRoute(address,address,UseUnifiedSwapper.RouteInfo) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#66-76):
+	External calls:
+	- ! IERC20(tokenIn).approve(routeInfo.router,type()(uint256).max - 1) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#71)
+	- ! IERC20(tokenOut).approve(routeInfo.router,type()(uint256).max - 1) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#73)
+	State variables written after the call(s):
+	- _routes[key] = routeInfo (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#75)
+	UseUnifiedSwapper._routes (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#55) can be used in cross function reentrancies:
+	- UseUnifiedSwapper.disableRoute(address,address) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#83-93)
+	- UseUnifiedSwapper.enableRoute(address,address,UseUnifiedSwapper.RouteInfo) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#66-76)
+	- UseUnifiedSwapper.isRouteEnabled(address,address) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#101-104)
+Reentrancy in MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279):
+	External calls:
+	- IStrategy(_strategies[index]).undeploy(strategyAssets) (contracts/core/MultiStrategy.sol#264)
+	- _allocateAssets(strategyAssets) (contracts/core/MultiStrategy.sol#265)
+		- totalDeployed += IStrategy(_strategies[i]).deploy(fractAmount) (contracts/core/MultiStrategy.sol#148)
+	State variables written after the call(s):
+	- _strategies[index] = _strategies[lastIndex] (contracts/core/MultiStrategy.sol#271)
+	MultiStrategy._strategies (contracts/core/MultiStrategy.sol#52) can be used in cross function reentrancies:
+	- MultiStrategy._allocateAssets(uint256) (contracts/core/MultiStrategy.sol#143-154)
+	- MultiStrategy.addStrategy(IStrategy) (contracts/core/MultiStrategy.sol#107-112)
+	- MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279)
+	- MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100)
+	- MultiStrategy.strategies() (contracts/core/MultiStrategy.sol#118-120)
+	- _strategies.pop() (contracts/core/MultiStrategy.sol#277)
+	MultiStrategy._strategies (contracts/core/MultiStrategy.sol#52) can be used in cross function reentrancies:
+	- MultiStrategy._allocateAssets(uint256) (contracts/core/MultiStrategy.sol#143-154)
+	- MultiStrategy.addStrategy(IStrategy) (contracts/core/MultiStrategy.sol#107-112)
+	- MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279)
+	- MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100)
+	- MultiStrategy.strategies() (contracts/core/MultiStrategy.sol#118-120)
+	- _weights[index] = _weights[lastIndex] (contracts/core/MultiStrategy.sol#272)
+	MultiStrategy._weights (contracts/core/MultiStrategy.sol#56) can be used in cross function reentrancies:
+	- MultiStrategy._allocateAssets(uint256) (contracts/core/MultiStrategy.sol#143-154)
+	- MultiStrategy.addStrategy(IStrategy) (contracts/core/MultiStrategy.sol#107-112)
+	- MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279)
+	- MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100)
+	- MultiStrategy.weights() (contracts/core/MultiStrategy.sol#126-128)
+	- _weights.pop() (contracts/core/MultiStrategy.sol#278)
+	MultiStrategy._weights (contracts/core/MultiStrategy.sol#56) can be used in cross function reentrancies:
+	- MultiStrategy._allocateAssets(uint256) (contracts/core/MultiStrategy.sol#143-154)
+	- MultiStrategy.addStrategy(IStrategy) (contracts/core/MultiStrategy.sol#107-112)
+	- MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279)
+	- MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100)
+	- MultiStrategy.weights() (contracts/core/MultiStrategy.sol#126-128)
+Reentrancy in StrategyPark.undeploy(uint256) (contracts/core/strategies/StrategyPark.sol#80-92):
+	External calls:
+	- IERC20(_asset).safeTransfer(msg.sender,amount) (contracts/core/strategies/StrategyPark.sol#85)
+	State variables written after the call(s):
+	- _deployedAmount -= amount (contracts/core/strategies/StrategyPark.sol#87)
+	StrategyPark._deployedAmount (contracts/core/strategies/StrategyPark.sol#30) can be used in cross function reentrancies:
+	- StrategyPark.harvest() (contracts/core/strategies/StrategyPark.sol#60-75)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+INFO:Detectors:
+CurveFiLibrary._executeCurveFiSwap(ICurveRouterNG,address[11],uint256[5][5],address[5],ISwapHandler.SwapParams).basePools (contracts/libraries/CurveFiLibrary.sol#103) is a local variable never initialized
+StrategyLeverageMorphoBlue._supplyAndBorrow(uint256,uint256).shares (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#148) is a local variable never initialized
+CurveFiLibrary._executeCurveFiSwap(ICurveRouterNG,address[11],uint256[5][5],address[5],ISwapHandler.SwapParams).baseTokens (contracts/libraries/CurveFiLibrary.sol#104) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+INFO:Detectors:
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) ignores return value by IStrategy(_strategies[indexes[i]]).deploy(amount) (contracts/core/MultiStrategy.sol#223)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) ignores return value by IStrategy(_strategies[indexes[i]]).undeploy(uint256(- deltas[i])) (contracts/core/MultiStrategy.sol#226)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) ignores return value by IStrategy(_strategies[highestWeightIndex]).deploy(dustBalance) (contracts/core/MultiStrategy.sol#240)
+MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279) ignores return value by IStrategy(_strategies[index]).undeploy(strategyAssets) (contracts/core/MultiStrategy.sol#264)
+VaultBase.depositNative(address) (contracts/core/VaultBase.sol#206-214) ignores return value by wETHA().functionCallWithValue(abi.encodeWithSignature(deposit()),msg.value) (contracts/core/VaultBase.sol#212)
+UseAeroSwapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseAeroSwapper.sol#73-77) ignores return value by AerodromeLibrary.swapAerodrome(aeroRouter(),params) (contracts/core/hooks/swappers/UseAeroSwapper.sol#76)
+UseCurveSwapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseCurveSwapper.sol#74-78) ignores return value by CurveFiLibrary.swapCurveFi(curveRouter(),params) (contracts/core/hooks/swappers/UseCurveSwapper.sol#77)
+UseUniV2Swapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUniV2Swapper.sol#76-80) ignores return value by UniV2Library.swapUniV2(v2UniRouter(),params) (contracts/core/hooks/swappers/UseUniV2Swapper.sol#79)
+UseUnifiedSwapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#115-136) ignores return value by UniV3Library.swapUniV3(IV3SwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#126)
+UseUnifiedSwapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#115-136) ignores return value by UniV2Library.swapUniV2(IUniswapV2Router02(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#129)
+UseUnifiedSwapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#115-136) ignores return value by AerodromeLibrary.swapAerodrome(ISwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#132)
+StrategySwapAnd.deploy(uint256) (contracts/core/strategies/StrategySwapAnd.sol#105-139) ignores return value by _underlyingStrategy.deploy(amountOut) (contracts/core/strategies/StrategySwapAnd.sol#128)
+StrategyLeverageMorphoBlue._supplyAndBorrow(uint256,uint256) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#146-152) ignores return value by _morpho.borrow(_marketParams,debtAmount,shares,onBehalf,receiver) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#151)
+StrategyLeverageMorphoBlue._repay(uint256) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#159-180) ignores return value by (None,None,totalBorrowAssets,totalBorrowShares) = _morpho.expectedMarketBalances(_marketParams) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#167)
+StrategyLeverageMorphoBlue._repay(uint256) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#159-180) ignores return value by (assetsRepaid,None) = _morpho.repay(_marketParams,amountPaid,shares,onBehalf,) (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#178)
+StrategySupplyMorpho._deploy(uint256) (contracts/core/strategies/StrategySupplyMorpho.sol#63-66) ignores return value by (deployedAmount,None) = _morpho.supply(_marketParams,amount,0,address(this),) (contracts/core/strategies/StrategySupplyMorpho.sol#64)
+StrategySupplyMorpho._undeploy(uint256) (contracts/core/strategies/StrategySupplyMorpho.sol#71-87) ignores return value by (assetsWithdrawn,None) = _morpho.withdraw(_marketParams,0,shares,address(this),address(this)) (contracts/core/strategies/StrategySupplyMorpho.sol#81)
+StrategySupplyMorpho._undeploy(uint256) (contracts/core/strategies/StrategySupplyMorpho.sol#71-87) ignores return value by (assetsWithdrawn,None) = _morpho.withdraw(_marketParams,amount,0,address(this),address(this)) (contracts/core/strategies/StrategySupplyMorpho.sol#83)
+UseUniV3Swapper.swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUniV3Swapper.sol#74-78) ignores return value by UniV3Library.swapUniV3(uniRouter(),params) (contracts/core/hooks/swappers/UseUniV3Swapper.sol#77)
+ChainLinkExRateOracle.getRatio() (contracts/oracles/ChainLinkExRateOracle.sol#37-45) ignores return value by (None,answer,startedAt,updatedAt,None) = _ratioFeed.latestRoundData() (contracts/oracles/ChainLinkExRateOracle.sol#38)
+ChainLinkOracle.getLatestPrice() (contracts/oracles/ChainLinkOracle.sol#60-67) ignores return value by (None,answer,startedAt,updatedAt,None) = _priceFeed.latestRoundData() (contracts/oracles/ChainLinkOracle.sol#61)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors:
+StrategyLeverage._flashLoanArgsHash (contracts/core/strategies/StrategyLeverage.sol#117) is written in both
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#259)
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#264)
+StrategyLeverage._flashLoanArgsHash (contracts/core/strategies/StrategyLeverage.sol#117) is written in both
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#379)
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#384)
+StrategyLeverage._flashLoanArgsHash (contracts/core/strategies/StrategyLeverage.sol#117) is written in both
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#557)
+	_flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#564)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#write-after-write
+INFO:Detectors:
+MultiStrategyVault.rebalance(IVault.RebalanceCommand[]).weights (contracts/core/MultiStrategyVault.sol#187) shadows:
+	- MultiStrategy.weights() (contracts/core/MultiStrategy.sol#126-128) (function)
+StrategyLeverage._initializeStrategyLeverage(address,address,address,address,address,address).flashLender (contracts/core/strategies/StrategyLeverage.sol#145) shadows:
+	- UseFlashLender.flashLender() (contracts/core/hooks/UseFlashLender.sol#17-19) (function)
+StrategyLeverageAAVEv3.initialize(address,address,address,address,address,address,address,uint8).flashLender (contracts/core/strategies/StrategyLeverageAAVEv3.sol#51) shadows:
+	- UseFlashLender.flashLender() (contracts/core/hooks/UseFlashLender.sol#17-19) (function)
+IUniswapV3Pool.fee().fee (contracts/interfaces/uniswap/v3/IUniswapV3Pool.sol#25) shadows:
+	- IUniswapV3Pool.fee() (contracts/interfaces/uniswap/v3/IUniswapV3Pool.sol#25) (function)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#local-variable-shadowing
+INFO:Detectors:
+MultiStrategyVault.initialize(address,string,string,address,IStrategy[],uint16[],address) (contracts/core/MultiStrategyVault.sol#78-100) has external calls inside a loop: istrategies[i].asset() != iAsset (contracts/core/MultiStrategyVault.sol#96)
+MultiStrategy._totalAssets() (contracts/core/MultiStrategy.sol#181-189) has external calls inside a loop: assets += IStrategy(_strategies[i]).totalAssets() (contracts/core/MultiStrategy.sol#183)
+MultiStrategy._harvestStrategies() (contracts/core/MultiStrategy.sol#191-196) has external calls inside a loop: balanceChange += IStrategy(_strategies[i]).harvest() (contracts/core/MultiStrategy.sol#194)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) has external calls inside a loop: balanceOf = IERC20(_strategies[indexes[i]].asset()).balanceOf(address(this)) (contracts/core/MultiStrategy.sol#221)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) has external calls inside a loop: IStrategy(_strategies[indexes[i]]).deploy(amount) (contracts/core/MultiStrategy.sol#223)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) has external calls inside a loop: IStrategy(_strategies[indexes[i]]).undeploy(uint256(- deltas[i])) (contracts/core/MultiStrategy.sol#226)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) has external calls inside a loop: dustBalance = IERC20(_strategies[0].asset()).balanceOf(address(this)) (contracts/core/MultiStrategy.sol#230)
+MultiStrategy._rebalanceStrategies(uint256[],int256[]) (contracts/core/MultiStrategy.sol#209-242) has external calls inside a loop: IStrategy(_strategies[highestWeightIndex]).deploy(dustBalance) (contracts/core/MultiStrategy.sol#240)
+Vault._totalAssets() (contracts/core/Vault.sol#156-158) has external calls inside a loop: amount = _strategy.totalAssets() (contracts/core/Vault.sol#157)
+Vault._harvest() (contracts/core/Vault.sol#107-109) has external calls inside a loop: _strategy.harvest() (contracts/core/Vault.sol#108)
+UseIERC4626.convertToVaultShares(IERC4626,uint256) (contracts/core/hooks/UseIERC4626.sol#62-67) has external calls inside a loop: vault.convertToShares(assets) (contracts/core/hooks/UseIERC4626.sol#66)
+UseIERC4626.convertToVaultAssets(IERC4626,uint256) (contracts/core/hooks/UseIERC4626.sol#49-54) has external calls inside a loop: vault.convertToAssets(shares) (contracts/core/hooks/UseIERC4626.sol#53)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Reentrancy in StrategyLeverage._adjustDebt(uint256,uint256) (contracts/core/strategies/StrategyLeverage.sol#359-388):
+	External calls:
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),deltaDebt + fee) (contracts/core/strategies/StrategyLeverage.sol#370)
+	State variables written after the call(s):
+	- _flashLoanArgsHash = keccak256(bytes)(abi.encodePacked(address(this),_debtToken,deltaDebt,data)) (contracts/core/strategies/StrategyLeverage.sol#375)
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#379)
+Reentrancy in StrategyLeverage._adjustDebt(uint256,uint256) (contracts/core/strategies/StrategyLeverage.sol#359-388):
+	External calls:
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),deltaDebt + fee) (contracts/core/strategies/StrategyLeverage.sol#370)
+	- ! flashLender().flashLoan(IERC3156FlashBorrowerUpgradeable(this),_debtToken,deltaDebt,data) (contracts/core/strategies/StrategyLeverage.sol#378)
+	State variables written after the call(s):
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#384)
+Reentrancy in StrategyLeverage._repayAndWithdraw(uint256,uint256,uint256,address) (contracts/core/strategies/StrategyLeverage.sol#773-793):
+	External calls:
+	- withdrawnAmount = _convertToDebt(cappedWithdrawAmount) (contracts/core/strategies/StrategyLeverage.sol#785)
+		- UniV3Library.swapUniV3(IV3SwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#126)
+		- UniV2Library.swapUniV2(IUniswapV2Router02(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#129)
+		- amountOut = router.exactInputSingle(ISwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#45-56)
+		- ! IERC20(params.underlyingIn).approve(address(router),params.amountIn) (contracts/libraries/UniV2Library.sol#45)
+		- amountOut = router.exactInputSingle(IV3SwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,fee:fee,recipient:address(this),sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#45-55)
+		- AerodromeLibrary.swapAerodrome(ISwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#132)
+		- amountIn = router.exactOutputSingle(ISwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#66-77)
+		- amountIn = router.exactOutputSingle(IV3SwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,fee:fee,recipient:address(this),amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#65-75)
+		- amounts = router.swapExactTokensForTokens(amountIn,amountOutMin,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#60-66)
+		- ! IERC20(params.underlyingIn).approve(address(router),amountInMax) (contracts/libraries/UniV2Library.sol#83)
+		- amounts_scope_0 = router.swapTokensForExactTokens(amountOut,amountInMax,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#86-92)
+	- IERC20Upgradeable(_debtToken).safeTransfer(receiver,debtToWithdraw) (contracts/core/strategies/StrategyLeverage.sol#789)
+	State variables written after the call(s):
+	- _pendingAmount = debtToWithdraw (contracts/core/strategies/StrategyLeverage.sol#792)
+Reentrancy in StrategyLeverage._supplyBorrow(uint256,uint256,uint256) (contracts/core/strategies/StrategyLeverage.sol#743-755):
+	External calls:
+	- collateralIn = _convertToCollateral(amount + loanAmount) (contracts/core/strategies/StrategyLeverage.sol#744)
+		- UniV3Library.swapUniV3(IV3SwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#126)
+		- UniV2Library.swapUniV2(IUniswapV2Router02(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#129)
+		- amountOut = router.exactInputSingle(ISwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#45-56)
+		- ! IERC20(params.underlyingIn).approve(address(router),params.amountIn) (contracts/libraries/UniV2Library.sol#45)
+		- amountOut = router.exactInputSingle(IV3SwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,fee:fee,recipient:address(this),sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#45-55)
+		- AerodromeLibrary.swapAerodrome(ISwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#132)
+		- amountIn = router.exactOutputSingle(ISwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#66-77)
+		- amountIn = router.exactOutputSingle(IV3SwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,fee:fee,recipient:address(this),amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#65-75)
+		- amounts = router.swapExactTokensForTokens(amountIn,amountOutMin,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#60-66)
+		- ! IERC20(params.underlyingIn).approve(address(router),amountInMax) (contracts/libraries/UniV2Library.sol#83)
+		- amounts_scope_0 = router.swapTokensForExactTokens(amountOut,amountInMax,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#86-92)
+	State variables written after the call(s):
+	- _pendingAmount = deployedAmount (contracts/core/strategies/StrategyLeverage.sol#753)
+Reentrancy in StrategyLeverage._undeploy(uint256,address) (contracts/core/strategies/StrategyLeverage.sol#517-575):
+	External calls:
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),deltaDebt + fee) (contracts/core/strategies/StrategyLeverage.sol#547)
+	State variables written after the call(s):
+	- _flashLoanArgsHash = keccak256(bytes)(abi.encodePacked(address(this),_debtToken,deltaDebt,data)) (contracts/core/strategies/StrategyLeverage.sol#553)
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#557)
+Reentrancy in StrategyLeverage._undeploy(uint256,address) (contracts/core/strategies/StrategyLeverage.sol#517-575):
+	External calls:
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),deltaDebt + fee) (contracts/core/strategies/StrategyLeverage.sol#547)
+	- ! flashLender().flashLoan(IERC3156FlashBorrowerUpgradeable(this),_debtToken,deltaDebt,data) (contracts/core/strategies/StrategyLeverage.sol#556)
+	State variables written after the call(s):
+	- _deployedAssets = _deployedAssets - undeployedAmount (contracts/core/strategies/StrategyLeverage.sol#569)
+	- _deployedAssets = 0 (contracts/core/strategies/StrategyLeverage.sol#569)
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#564)
+Reentrancy in StrategyLeverage.deploy(uint256) (contracts/core/strategies/StrategyLeverage.sol#234-273):
+	External calls:
+	- IERC20Upgradeable(_debtToken).safeTransferFrom(msg.sender,address(this),amount) (contracts/core/strategies/StrategyLeverage.sol#239)
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),loanAmount + fee) (contracts/core/strategies/StrategyLeverage.sol#249)
+	State variables written after the call(s):
+	- _flashLoanArgsHash = keccak256(bytes)(abi.encodePacked(address(this),_debtToken,loanAmount,data)) (contracts/core/strategies/StrategyLeverage.sol#255)
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#259)
+Reentrancy in StrategyLeverage.deploy(uint256) (contracts/core/strategies/StrategyLeverage.sol#234-273):
+	External calls:
+	- IERC20Upgradeable(_debtToken).safeTransferFrom(msg.sender,address(this),amount) (contracts/core/strategies/StrategyLeverage.sol#239)
+	- ! IERC20Upgradeable(_debtToken).approve(flashLenderA(),loanAmount + fee) (contracts/core/strategies/StrategyLeverage.sol#249)
+	- ! flashLender().flashLoan(IERC3156FlashBorrowerUpgradeable(this),_debtToken,loanAmount,data) (contracts/core/strategies/StrategyLeverage.sol#258)
+	State variables written after the call(s):
+	- _deployedAssets += deployedAmount (contracts/core/strategies/StrategyLeverage.sol#266)
+	- _flashLoanArgsHash = 0 (contracts/core/strategies/StrategyLeverage.sol#264)
+	- _pendingAmount = 0 (contracts/core/strategies/StrategyLeverage.sol#272)
+Reentrancy in StrategyPark.deploy(uint256) (contracts/core/strategies/StrategyPark.sol#44-55):
+	External calls:
+	- IERC20(_asset).safeTransferFrom(msg.sender,address(this),amount) (contracts/core/strategies/StrategyPark.sol#48)
+	State variables written after the call(s):
+	- _deployedAmount += amount (contracts/core/strategies/StrategyPark.sol#50)
+Reentrancy in StrategySupplyBase.deploy(uint256) (contracts/core/strategies/StrategySupplyBase.sol#69-85):
+	External calls:
+	- ERC20(_asset).safeTransferFrom(msg.sender,address(this),amount) (contracts/core/strategies/StrategySupplyBase.sol#73)
+	State variables written after the call(s):
+	- _deployedAmount += deployedAmount (contracts/core/strategies/StrategySupplyBase.sol#78)
+Reentrancy in StrategySwapAnd.deploy(uint256) (contracts/core/strategies/StrategySwapAnd.sol#105-139):
+	External calls:
+	- IERC20(_asset).safeTransferFrom(msg.sender,address(this),amount) (contracts/core/strategies/StrategySwapAnd.sol#109)
+	- _underlyingStrategy.deploy(amountOut) (contracts/core/strategies/StrategySwapAnd.sol#128)
+	State variables written after the call(s):
+	- _deployedAmount += amountOut (contracts/core/strategies/StrategySwapAnd.sol#130)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
+INFO:Detectors:
+Reentrancy in StrategyLeverage._payDebt(uint256,uint256) (contracts/core/strategies/StrategyLeverage.sol#591-630):
+	External calls:
+	- (amountIn,None) = swap(ISwapHandler.SwapParams(_collateralToken,_debtToken,ISwapHandler.SwapType.EXACT_OUTPUT,amountInMax,debtAmount + fee,bytes())) (contracts/core/strategies/StrategyLeverage.sol#611-620)
+		- UniV3Library.swapUniV3(IV3SwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#126)
+		- UniV2Library.swapUniV2(IUniswapV2Router02(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#129)
+		- amountOut = router.exactInputSingle(ISwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#45-56)
+		- ! IERC20(params.underlyingIn).approve(address(router),params.amountIn) (contracts/libraries/UniV2Library.sol#45)
+		- amountOut = router.exactInputSingle(IV3SwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,fee:fee,recipient:address(this),sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#45-55)
+		- AerodromeLibrary.swapAerodrome(ISwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#132)
+		- amountIn = router.exactOutputSingle(ISwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#66-77)
+		- amountIn = router.exactOutputSingle(IV3SwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,fee:fee,recipient:address(this),amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#65-75)
+		- amounts = router.swapExactTokensForTokens(amountIn,amountOutMin,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#60-66)
+		- ! IERC20(params.underlyingIn).approve(address(router),amountInMax) (contracts/libraries/UniV2Library.sol#83)
+		- amounts_scope_0 = router.swapTokensForExactTokens(amountOut,amountInMax,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#86-92)
+	Event emitted after the call(s):
+	- StrategyUndeploy(msg.sender,debtAmount) (contracts/core/strategies/StrategyLeverage.sol#629)
+Reentrancy in StrategyLeverage._supplyBorrow(uint256,uint256,uint256) (contracts/core/strategies/StrategyLeverage.sol#743-755):
+	External calls:
+	- collateralIn = _convertToCollateral(amount + loanAmount) (contracts/core/strategies/StrategyLeverage.sol#744)
+		- UniV3Library.swapUniV3(IV3SwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#126)
+		- UniV2Library.swapUniV2(IUniswapV2Router02(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#129)
+		- amountOut = router.exactInputSingle(ISwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#45-56)
+		- ! IERC20(params.underlyingIn).approve(address(router),params.amountIn) (contracts/libraries/UniV2Library.sol#45)
+		- amountOut = router.exactInputSingle(IV3SwapRouter.ExactInputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,amountIn:amountIn,amountOutMinimum:params.amountOut,fee:fee,recipient:address(this),sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#45-55)
+		- AerodromeLibrary.swapAerodrome(ISwapRouter(routeInfo.router),params) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#132)
+		- amountIn = router.exactOutputSingle(ISwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,tickSpacing:tickspacing,recipient:address(this),deadline:block.timestamp,amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/AerodromeLibrary.sol#66-77)
+		- amountIn = router.exactOutputSingle(IV3SwapRouter.ExactOutputSingleParams({tokenIn:params.underlyingIn,tokenOut:params.underlyingOut,fee:fee,recipient:address(this),amountOut:amountOut,amountInMaximum:params.amountIn,sqrtPriceLimitX96:0})) (contracts/libraries/UniV3Library.sol#65-75)
+		- amounts = router.swapExactTokensForTokens(amountIn,amountOutMin,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#60-66)
+		- ! IERC20(params.underlyingIn).approve(address(router),amountInMax) (contracts/libraries/UniV2Library.sol#83)
+		- amounts_scope_0 = router.swapTokensForExactTokens(amountOut,amountInMax,path,address(this),block.timestamp) (contracts/libraries/UniV2Library.sol#86-92)
+	Event emitted after the call(s):
+	- StrategyDeploy(msg.sender,deployedAmount) (contracts/core/strategies/StrategyLeverage.sol#754)
+Reentrancy in MultiStrategy.removeStrategy(uint256) (contracts/core/MultiStrategy.sol#251-279):
+	External calls:
+	- IStrategy(_strategies[index]).undeploy(strategyAssets) (contracts/core/MultiStrategy.sol#264)
+	- _allocateAssets(strategyAssets) (contracts/core/MultiStrategy.sol#265)
+		- totalDeployed += IStrategy(_strategies[i]).deploy(fractAmount) (contracts/core/MultiStrategy.sol#148)
+	Event emitted after the call(s):
+	- RemoveStrategy(address(_strategies[lastIndex])) (contracts/core/MultiStrategy.sol#275)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+MorphoBalancesLib.expectedMarketBalances(IMorpho,MarketParams) (node_modules/@morpho-org/morpho-blue/src/libraries/periphery/MorphoBalancesLib.sol#33-61) uses timestamp for comparisons
+	Dangerous comparisons:
+	- elapsed != 0 && market.totalBorrowAssets != 0 && marketParams.irm != address(0) (node_modules/@morpho-org/morpho-blue/src/libraries/periphery/MorphoBalancesLib.sol#44)
+	- market.fee != 0 (node_modules/@morpho-org/morpho-blue/src/libraries/periphery/MorphoBalancesLib.sol#50)
+AerodromeLibrary.swapAerodrome(ISwapRouter,ISwapHandler.SwapParams) (contracts/libraries/AerodromeLibrary.sol#30-79) uses timestamp for comparisons
+	Dangerous comparisons:
+	- amountOut == 0 (contracts/libraries/AerodromeLibrary.sol#58)
+UniV2Library.swapUniV2(IUniswapV2Router02,ISwapHandler.SwapParams) (contracts/libraries/UniV2Library.sol#28-100) uses timestamp for comparisons
+	Dangerous comparisons:
+	- amountOut == 0 (contracts/libraries/UniV2Library.sol#97)
+ChainLinkOracle.getSafeLatestPrice(IOracle.PriceOptions) (contracts/oracles/ChainLinkOracle.sol#69-77) uses timestamp for comparisons
+	Dangerous comparisons:
+	- priceOptions.maxAge != 0 && (block.timestamp - price.lastUpdate) > priceOptions.maxAge (contracts/oracles/ChainLinkOracle.sol#73)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Void constructor called in BKR.constructor(address) (contracts/core/governance/BKR.sol#27-30):
+	- ERC20Votes() (contracts/core/governance/BKR.sol#27)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#void-constructor
+INFO:Detectors:
+MarketParamsLib.id(MarketParams) (node_modules/@morpho-org/morpho-blue/src/libraries/MarketParamsLib.sol#16-20) uses assembly
+	- INLINE ASM (node_modules/@morpho-org/morpho-blue/src/libraries/MarketParamsLib.sol#17-19)
+UtilsLib.exactlyOneZero(uint256,uint256) (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#13-17) uses assembly
+	- INLINE ASM (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#14-16)
+UtilsLib.min(uint256,uint256) (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#20-24) uses assembly
+	- INLINE ASM (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#21-23)
+UtilsLib.zeroFloorSub(uint256,uint256) (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#33-37) uses assembly
+	- INLINE ASM (node_modules/@morpho-org/morpho-blue/src/libraries/UtilsLib.sol#34-36)
+VaultRouter._handlePullToken(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#164-178) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#171-174)
+VaultRouter._handlePullTokenFrom(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#186-202) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#194-198)
+VaultRouter._handlePushToken(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#210-226) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#218-222)
+VaultRouter._handlePushTokenFrom(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#234-252) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#243-248)
+VaultRouter._handleSweepTokens(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#260-274) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#267-270)
+VaultRouter._handleWrapETH(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#282-294) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#288-290)
+VaultRouter._handleUnwrapETH(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#302-314) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#308-310)
+VaultRouter._handlePullTokenWithPermit(bytes,uint256[],uint32) (contracts/core/VaultRouter.sol#322-346) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#334-342)
+VaultRouter._handleVaultDeposit(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#355-373) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#364-368)
+VaultRouter._handleVaultMint(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#382-400) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#391-395)
+VaultRouter._handleVaultRedeem(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#409-429) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#419-424)
+VaultRouter._handleVaultWithdraw(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#438-458) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#448-453)
+VaultRouter._handleVaultConvertToShares(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#467-483) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#475-478)
+VaultRouter._handleVaultConvertToAssets(bytes,uint256[],uint32,uint32) (contracts/core/VaultRouter.sol#492-508) uses assembly
+	- INLINE ASM (contracts/core/VaultRouter.sol#500-503)
+UseCurveSwapper._initUseCurveSwapper(ICurveRouterNG) (contracts/core/hooks/swappers/UseCurveSwapper.sol#35-40) uses assembly
+	- INLINE ASM (contracts/core/hooks/swappers/UseCurveSwapper.sol#37-39)
+UseCurveSwapper.curveRouter() (contracts/core/hooks/swappers/UseCurveSwapper.sol#45-51) uses assembly
+	- INLINE ASM (contracts/core/hooks/swappers/UseCurveSwapper.sol#47-49)
+UseUniV2Swapper._initUseUniV2Swapper(IUniswapV2Router02) (contracts/core/hooks/swappers/UseUniV2Swapper.sol#33-38) uses assembly
+	- INLINE ASM (contracts/core/hooks/swappers/UseUniV2Swapper.sol#35-37)
+UseUniV2Swapper.v2UniRouter() (contracts/core/hooks/swappers/UseUniV2Swapper.sol#43-49) uses assembly
+	- INLINE ASM (contracts/core/hooks/swappers/UseUniV2Swapper.sol#45-47)
+StrategySettings._setUint256(bytes32,uint256) (contracts/core/strategies/StrategySettings.sol#98-102) uses assembly
+	- INLINE ASM (contracts/core/strategies/StrategySettings.sol#99-101)
+StrategySettings._getUint256(bytes32) (contracts/core/strategies/StrategySettings.sol#104-108) uses assembly
+	- INLINE ASM (contracts/core/strategies/StrategySettings.sol#105-107)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100) has costly operations inside a loop:
+	- _totalWeight += iweights[i] (contracts/core/MultiStrategy.sol#91)
+MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100) has costly operations inside a loop:
+	- _weights = iweights (contracts/core/MultiStrategy.sol#87)
+MultiStrategy.setWeights(uint16[]) (contracts/core/MultiStrategy.sol#85-100) has costly operations inside a loop:
+	- _totalWeight = 0 (contracts/core/MultiStrategy.sol#88)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop
+INFO:Detectors:
+VaultRouter.dispatch(uint256,bytes,uint256[]) (contracts/core/VaultRouter.sol#78-130) has a high cyclomatic complexity (16).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+INFO:Detectors:
+BKR._burn(address,uint256) (contracts/core/governance/BKR.sol#40-42) is never used and should be removed
+UseAeroSwapper.aeroRouterA() (contracts/core/hooks/swappers/UseAeroSwapper.sol#42-44) is never used and should be removed
+UseIERC20._initUseIERC20(VaultRegistry,bytes32) (contracts/core/hooks/UseIERC20.sol#14-17) is never used and should be removed
+UseIERC20.ierc20() (contracts/core/hooks/UseIERC20.sol#19-21) is never used and should be removed
+UseIERC20.ierc20A() (contracts/core/hooks/UseIERC20.sol#23-25) is never used and should be removed
+UseIERC4626.totalVaultAssets(IERC4626) (contracts/core/hooks/UseIERC4626.sol#74-79) is never used and should be removed
+UseIERC4626.vaultAsset(IERC4626) (contracts/core/hooks/UseIERC4626.sol#86-91) is never used and should be removed
+UseOracle._initUseOracle(address) (contracts/core/hooks/UseOracle.sol#13-16) is never used and should be removed
+UseOracle.getLastPrice() (contracts/core/hooks/UseOracle.sol#22-24) is never used and should be removed
+UseOracle.oracle() (contracts/core/hooks/UseOracle.sol#18-20) is never used and should be removed
+UseStETH._initUseStETH(address) (contracts/core/hooks/UseStETH.sol#13-16) is never used and should be removed
+UseStETH.stETH() (contracts/core/hooks/UseStETH.sol#18-20) is never used and should be removed
+UseStETH.stETHA() (contracts/core/hooks/UseStETH.sol#22-24) is never used and should be removed
+UseStrategy.strategy() (contracts/core/hooks/UseStrategy.sol#18-20) is never used and should be removed
+UseUniQuoter._initUseUniQuoter(IQuoterV2) (contracts/core/hooks/UseUniQuoter.sol#12-15) is never used and should be removed
+UseUniQuoter.uniQuoter() (contracts/core/hooks/UseUniQuoter.sol#17-19) is never used and should be removed
+UseUniQuoter.uniQuoterA() (contracts/core/hooks/UseUniQuoter.sol#21-23) is never used and should be removed
+UseUniV3Swapper.uniRouterA() (contracts/core/hooks/swappers/UseUniV3Swapper.sol#41-43) is never used and should be removed
+UseWstETH._initUseWstETH(address,address) (contracts/core/hooks/UseWstETH.sol#35-40) is never used and should be removed
+UseWstETH._unwrapWstETH(uint256) (contracts/core/hooks/UseWstETH.sol#73-76) is never used and should be removed
+UseWstETH._wrapWstETH(uint256) (contracts/core/hooks/UseWstETH.sol#63-66) is never used and should be removed
+UseWstETH.wstETH() (contracts/core/hooks/UseWstETH.sol#46-48) is never used and should be removed
+UseWstETH.wstETHA() (contracts/core/hooks/UseWstETH.sol#54-56) is never used and should be removed
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
+INFO:Detectors:
+Version constraint >=0.5.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- DirtyBytesArrayToStorage
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow
+	- privateCanBeOverridden
+	- SignedArrayStorageCopy
+	- ABIEncoderV2StorageArrayWithMultiSlotElement
+	- DynamicConstructorArgumentsClippedABIV2
+	- UninitializedFunctionPointerInConstructor
+	- IncorrectEventSignatureInLibraries
+	- ABIEncoderV2PackedStorage.
+It is used by:
+	- >=0.5.0 (node_modules/@morpho-org/morpho-blue/src/interfaces/IIrm.sol#2)
+	- >=0.5.0 (node_modules/@morpho-org/morpho-blue/src/interfaces/IMorpho.sol#2)
+Version constraint >=0.7.5 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- >=0.7.5 (contracts/interfaces/aerodrome/ISwapRouter.sol#2)
+Version constraint >=0.6.2 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- MissingEscapingInFormatting
+	- ArraySliceDynamicallyEncodedBaseType
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow.
+It is used by:
+	- >=0.6.2 (contracts/interfaces/uniswap/v2/IUniswapV2Router01.sol#2)
+	- >=0.6.2 (contracts/interfaces/uniswap/v2/IUniswapV2Router02.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Low level call in CustomExRateOracle.getRatio() (contracts/oracles/CustomExRateOracle.sol#44-54):
+	- (success,result) = _call.target.staticcall(_call.callData) (contracts/oracles/CustomExRateOracle.sol#45)
+Low level call in RatioOracle._getPriceInternal(IOracle.PriceOptions) (contracts/oracles/RatioOracle.sol#50-59):
+	- (success,result) = _call.target.staticcall(_call.callData) (contracts/oracles/RatioOracle.sol#51)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Function IMorphoBase.DOMAIN_SEPARATOR() (node_modules/@morpho-org/morpho-blue/src/interfaces/IMorpho.sol#55) is not in mixedCase
+Parameter GovernableOwnable.transferGovernorship(address)._newGovernor (contracts/core/GovernableOwnable.sol#49) is not in mixedCase
+Variable MultiStrategyVault.__gap (contracts/core/MultiStrategyVault.sol#196) is not in mixedCase
+Variable Vault.__gap (contracts/core/Vault.sol#190) is not in mixedCase
+Variable VaultBase.__gap (contracts/core/VaultBase.sol#500) is not in mixedCase
+Variable VaultRouter.__gap (contracts/core/VaultRouter.sol#514) is not in mixedCase
+Function VaultSettings._initializeVaultSettings() (contracts/core/VaultSettings.sol#89-94) is not in mixedCase
+Variable VaultSettings.__gapBefore (contracts/core/VaultSettings.sol#38) is not in mixedCase
+Variable VaultSettings.__gap (contracts/core/VaultSettings.sol#234) is not in mixedCase
+Function UseIERC4626Mock.test__depositVault(IERC4626,uint256,address) (contracts/core/hooks/UseIERC4626.sol#170-172) is not in mixedCase
+Function UseIERC4626Mock.test__mintVault(IERC4626,uint256,address) (contracts/core/hooks/UseIERC4626.sol#180-182) is not in mixedCase
+Function UseIERC4626Mock.test__withdrawVault(IERC4626,uint256,address,address) (contracts/core/hooks/UseIERC4626.sol#191-198) is not in mixedCase
+Function UseIERC4626Mock.test__redeemVault(IERC4626,uint256,address,address) (contracts/core/hooks/UseIERC4626.sol#207-214) is not in mixedCase
+Function UsePermitTransfersMock.test__pullTokensWithPermit(IERC20Permit,uint256,address,uint256,uint8,bytes32,bytes32) (contracts/core/hooks/UsePermitTransfers.sol#51-61) is not in mixedCase
+Function UseTokenActionsMock.test__pullToken(IERC20,uint256) (contracts/core/hooks/UseTokenActions.sol#114-116) is not in mixedCase
+Function UseTokenActionsMock.test__pullTokenFrom(IERC20,address,uint256) (contracts/core/hooks/UseTokenActions.sol#118-120) is not in mixedCase
+Function UseTokenActionsMock.test__pushToken(IERC20,address,uint256) (contracts/core/hooks/UseTokenActions.sol#122-124) is not in mixedCase
+Function UseTokenActionsMock.test__pushTokenFrom(IERC20,address,address,uint256) (contracts/core/hooks/UseTokenActions.sol#126-128) is not in mixedCase
+Function UseTokenActionsMock.test__sweepTokens(IERC20,address) (contracts/core/hooks/UseTokenActions.sol#130-132) is not in mixedCase
+Function UseWETHMock.test__unwrapETH(uint256) (contracts/core/hooks/UseWETH.sol#98-100) is not in mixedCase
+Function UseWETHMock.test__wrapETH(uint256) (contracts/core/hooks/UseWETH.sol#102-104) is not in mixedCase
+Function UseAeroSwapperMock.test__swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseAeroSwapper.sol#94-96) is not in mixedCase
+Function UseAeroSwapperMock.test_allowRouterSpend(IERC20,uint256) (contracts/core/hooks/swappers/UseAeroSwapper.sol#98-100) is not in mixedCase
+Function UseCurveSwapperMock.test__swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseCurveSwapper.sol#95-97) is not in mixedCase
+Function UseUniV2SwapperMock.test__swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUniV2Swapper.sol#103-105) is not in mixedCase
+Function UseUnifiedSwapperMock.test__swap(ISwapHandler.SwapParams) (contracts/core/hooks/swappers/UseUnifiedSwapper.sol#153-155) is not in mixedCase
+Variable StrategyLeverage.__gap (contracts/core/strategies/StrategyLeverage.sol#855) is not in mixedCase
+Variable StrategyLeverageSettings.__gap (contracts/core/strategies/StrategyLeverageSettings.sol#181) is not in mixedCase
+Function ICurveRouterNG.get_dy(address[11],uint256[5][5],uint256,address[5]) (contracts/interfaces/curve/ICurveRouterNG.sol#64-69) is not in mixedCase
+Function ICurveRouterNG.get_dx(address[11],uint256[5][5],uint256,address[5],address[5],address[5]) (contracts/interfaces/curve/ICurveRouterNG.sol#80-87) is not in mixedCase
+Function IUniswapV2Router01.WETH() (contracts/interfaces/uniswap/v2/IUniswapV2Router01.sol#6) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+The following unused import(s) in contracts/interfaces/core/IStrategy.sol should be removed:
+	-import {IOracle} from "./IOracle.sol"; (contracts/interfaces/core/IStrategy.sol#4)
+The following unused import(s) in contracts/core/strategies/StrategyLeverageSettings.sol should be removed:
+	-import {GovernableOwnable} from "../GovernableOwnable.sol"; (contracts/core/strategies/StrategyLeverageSettings.sol#4)
+The following unused import(s) in contracts/core/strategies/StrategySupplyMorpho.sol should be removed:
+	-import {MathLibrary} from "../../libraries/MathLibrary.sol"; (contracts/core/strategies/StrategySupplyMorpho.sol#7)
+The following unused import(s) in contracts/mocks/BorrowerAttacker.sol should be removed:
+	-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"; (contracts/mocks/BorrowerAttacker.sol#9)
+
+	-import {VaultRegistry} from "../core/VaultRegistry.sol"; (contracts/mocks/BorrowerAttacker.sol#6)
+The following unused import(s) in contracts/mocks/ERC3156FlashBorrowerMock.sol should be removed:
+	-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"; (contracts/mocks/ERC3156FlashBorrowerMock.sol#8)
+
+	-import {VaultRegistry} from "../core/VaultRegistry.sol"; (contracts/mocks/ERC3156FlashBorrowerMock.sol#6)
+The following unused import(s) in contracts/mocks/StrategyMock.sol should be removed:
+	-import {IOracle} from "../interfaces/core/IOracle.sol"; (contracts/mocks/StrategyMock.sol#6)
+
+	-import {IOracle} from "../interfaces/core/IOracle.sol"; (contracts/mocks/StrategyMock.sol#7)
+The following unused import(s) in contracts/mocks/VaultRouterMock.sol should be removed:
+	-import {IV3SwapRouter} from "../interfaces/uniswap/v3/IV3SwapRouter.sol"; (contracts/mocks/VaultRouterMock.sol#10)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-imports
+INFO:Detectors:
+MultiStrategyVault.__gap (contracts/core/MultiStrategyVault.sol#196) is never used in MultiStrategyVault (contracts/core/MultiStrategyVault.sol#43-197)
+Vault._VAULT_VERSION (contracts/core/Vault.sol#51) is never used in Vault (contracts/core/Vault.sol#38-191)
+Vault.__gap (contracts/core/Vault.sol#190) is never used in Vault (contracts/core/Vault.sol#38-191)
+StrategyLeverage._emptySlots (contracts/core/strategies/StrategyLeverage.sol#115) is never used in StrategyLeverageAAVEv3 (contracts/core/strategies/StrategyLeverageAAVEv3.sol#28-118)
+StrategyLeverage._emptySlots (contracts/core/strategies/StrategyLeverage.sol#115) is never used in StrategyLeverageMorphoBlue (contracts/core/strategies/StrategyLeverageMorphoBlue.sol#36-193)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-state-variable
+INFO:Detectors:
+Loop condition i < _strategies.length (contracts/core/MultiStrategy.sol#182) should use cached array length instead of referencing `length` member of the storage array.
+ Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cache-array-length
+INFO:Slither:. analyzed (218 contracts with 94 detectors), 183 result(s) found

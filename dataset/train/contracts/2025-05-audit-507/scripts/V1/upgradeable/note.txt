@@ -1,0 +1,15 @@
+so i have deployed pairfactory and the routerv2 
+
+i have to deploy the bribe factory v3 through the proxy 
+
+function initialize(address _voter, address _permissionsRegistry) initializer  public 
+
+to deploy the bribe factory proxy, we need _voter, initializer function input args 
+
+
+
+_swap -- commented -- no error 
+
+IBaseV1Pair(pairFor(routes[i].from, routes[i].to, routes[i].stable)).swap -- commented -- no error 
+
+swap function inside the pair contract from the block scoped part till the end -- commented -- no error

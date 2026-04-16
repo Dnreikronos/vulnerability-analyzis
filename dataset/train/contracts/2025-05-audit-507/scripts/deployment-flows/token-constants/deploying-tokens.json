@@ -1,0 +1,51 @@
+[
+  {
+    "name": "CHAMP",
+    "ticker": "CHAMP",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xeb6d78148f001f3aa2f588997c5e102e489ad341/logo.svg",
+    "decimal": 18,
+    "address": "0x78dC6A039dDd938F70d8c50C2EF3C522BA0FB1e5"
+  },
+  {
+    "name": "SUPER",
+    "ticker": "SUPER",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xdbfefd2e8460a6ee4955a68582f85708baea60a3/logo.svg",
+    "decimal": 18,
+    "address": "0xdDC18bF5f716742C746F156333f86E9c5bFbeC36"
+  },
+  {
+    "name": "XAI",
+    "ticker": "XAI",
+    "logo": "https://coin-images.coingecko.com/coins/images/34258/large/round_icon_2048_px.png?1719523838",
+    "decimal": 18,
+    "address": "0x7017d1489ba5902D7b5a9e74BBA8a3eA5addcE88"
+  },
+  {
+    "name": "VIRTUALS",
+    "ticker": "VIRTUALS",
+    "logo": "https://coin-images.coingecko.com/coins/images/34057/large/LOGOMARK.png?1708356054",
+    "decimal": 18,
+    "address": "0x41B3601B0e6becE4D14595979E041Ec6878777FC"
+  },
+  {
+    "name": "YGG",
+    "ticker": "YGG",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0xaac78d1219c08aecc8e37e03858fe885f5ef1799/logo.svg",
+    "decimal": 18,
+    "address": "0xaf59662042247281E08f100Ce43bf647D39A2FA5"
+  },
+  {
+    "name": "WAVAX",
+    "ticker": "WAVAX",
+    "logo": "https://assets.blackhole.xyz/wavax.png",
+    "decimal": 18,
+    "address": "0xb3B3CbEd8243682845C2ff23Ea1FD48e6144E34F"
+  },
+  {
+    "name": "DAI",
+    "ticker": "DAI",
+    "logo": "https://raw.githubusercontent.com/SmolDapp/tokenAssets/main/tokens/8453/0x50c5725949a6f0c72e6c4a641f24049a917db0cb/logo.svg",
+    "decimal": 18,
+    "address": "0xBb0aB77Cf6E08f03e4cceABbA163860Cd1848df7"
+  }
+]

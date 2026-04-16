@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Blachole",
+    "ticker": "BLACK",
+    "logo": "need to be uploaded to github or ipfs",
+    "decimal": 18,
+    "address": "0xB7F6662feA634154234118B17E698F1c13Da3CE5"
+  },
+  {
+    "name": "USDC",
+    "ticker": "USDC",
+    "logo": "needs to be fetched from someplace",
+    "decimal": 18,
+    "address": "0x0Ea98bF8ff474639f6Cbeb4c4bDd1bA74aA9A4a4"
+  }
+]
